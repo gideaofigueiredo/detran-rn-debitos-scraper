@@ -3,3 +3,4 @@
 __pycache__/
 *.pyc
 debito_veiculos_*.csv
+veiculos_*.csv

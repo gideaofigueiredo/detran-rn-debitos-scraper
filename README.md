@@ -4,7 +4,7 @@ Web scraper para extração automática de débitos veiculares do [portal do DET
 
 ## ✨ Funcionalidades
 
-- 🔐 Login automático no portal do DETRAN/RN via CNPJ
+- 🔐 Login automático no portal do DETRAN/RN via CNPJ (Consultas só podem ser feitas na área logada do Portal de Serviços)
 - 📋 Consulta em lote a partir de um arquivo CSV com placas e RENAVAMs
 - 📊 Extração de débitos: descrição, nosso número, vencimento, valor e total
 - 💾 Exportação dos resultados para CSV

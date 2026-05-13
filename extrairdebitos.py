@@ -14,7 +14,7 @@ print("--- Iniciando o processo de extração de dados ---")
 
 with pw.sync_playwright() as p:
     # config navegador
-    navegador = p.chromium.launch(headless=True)
+    navegador = p.chromium.launch(headless=False)
     contexto = navegador.new_context()
     pagina = contexto.new_page()
 
@@ -33,14 +33,17 @@ with pw.sync_playwright() as p:
     veiculos = pd.read_csv("veiculos.csv")
     todos_debitos = []
 
-    for _, l in tqdm(veiculos.iterrows(), total=len(veiculos), desc="Extraindo débitos"):
+    pbar = tqdm(veiculos.iterrows(), total=len(veiculos))
+
+    for _, l in pbar:
+        pbar.set_description(f"Processando {l['PLACA']}...")
         PLACA = l["PLACA"]
         RENAVAM = str(l["RENAVAM"])
         pagina.get_by_role("textbox", name="Placa").fill(PLACA)
         pagina.get_by_role("textbox", name="Renavam").fill(RENAVAM)
         pagina.get_by_role("button", name="Avançar").click()
 
-        print(f"Carregando dados de {PLACA}...")
+        #print(f"Carregando dados de {PLACA}...")
         pagina.wait_for_timeout(2500) # Tempo para o DB do Detran responder
         pagina.wait_for_selector("table > tbody > tr", state="visible")
 
@@ -64,10 +67,11 @@ with pw.sync_playwright() as p:
                     }
                     todos_debitos.append(debito)
 
-            print(f"  → {len(todos_debitos)} débito(s) encontrado(s).")
+            #print(f"  → {len(todos_debitos)} débito(s) encontrado(s).")
 
         except pw.TimeoutError:
-            print(f"  → Nenhum débito encontrado para {PLACA}.")
+            #print(f"  → Nenhum débito encontrado para {PLACA}.")
+            pass
 
         pagina.get_by_role("link", name="Consulta de Veículo").click()
         pagina.get_by_role("textbox", name="Placa").wait_for()
